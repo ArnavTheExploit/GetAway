@@ -2,9 +2,13 @@
   "expo": {
     "name": "GetAway",
     "slug": "GetAway",
+    "scheme": "getaway",
+    "icon": "./assets/getaway-logo.png",
+    "androidPackage": "com.arnavpania.getaway",
+    "platforms": ["ios", "android", "web"],
+    "owner": "arnavpania",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -13,9 +17,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.codenest.getaway"
     },
     "android": {
+      "package": "com.codenest.getaway",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -23,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9acf5bda-8c75-452b-98f1-bfcb4ed70df7"
+      }
     }
   }
 }
