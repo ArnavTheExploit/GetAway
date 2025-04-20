@@ -8,7 +8,8 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  Platform
+  Platform,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -17,8 +18,9 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { db } from '../firebaseConfig';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-
 export default function CensusScreen({ navigation }) {
+  console.log("CensusScreen rendered");
+
   const [profileImage, setProfileImage] = useState(null);
   const [fullName, setFullName] = useState('');
   const [dob, setDob] = useState('');
@@ -29,22 +31,23 @@ export default function CensusScreen({ navigation }) {
   const [emergencyPhone, setEmergencyPhone] = useState('');
   const [emergencyRelation, setEmergencyRelation] = useState('');
   const [vehicleNumber, setVehicleNumber] = useState('');
-
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const handleProfilePicturePress = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
+    if (!permissionResult.granted) {
       alert('Permission to access gallery is required!');
       return;
     }
+
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
       allowsEditing: true,
       aspect: [1, 1],
     });
-    if (!pickerResult.canceled) {
+
+    if (!pickerResult.canceled && pickerResult.assets.length > 0) {
       setProfileImage(pickerResult.assets[0].uri);
     }
   };
@@ -56,6 +59,11 @@ export default function CensusScreen({ navigation }) {
   };
 
   const handleSave = async () => {
+    if (!fullName || !dob || !gender || !city) {
+      Alert.alert("Missing Info", "Please fill in all required fields.");
+      return;
+    }
+
     try {
       await addDoc(collection(db, 'censusData'), {
         profileImage,
@@ -70,6 +78,7 @@ export default function CensusScreen({ navigation }) {
         vehicleNumber,
         createdAt: serverTimestamp(),
       });
+      console.log("Census data saved");
       navigation.replace('Home');
     } catch (error) {
       console.log('Error saving census data:', error);
@@ -100,10 +109,22 @@ export default function CensusScreen({ navigation }) {
           </View>
         </TouchableOpacity>
 
-        <TextInput style={styles.input} placeholder="Full Name" placeholderTextColor="#ccc" value={fullName} onChangeText={setFullName} />
+        <TextInput
+          style={styles.input}
+          placeholder="Full Name"
+          placeholderTextColor="#ccc"
+          value={fullName}
+          onChangeText={setFullName}
+        />
 
         <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
-          <TextInput style={styles.input} placeholder="Date of Birth (DD/MM/YYYY)" placeholderTextColor="#ccc" value={dob} editable={false} />
+          <TextInput
+            style={styles.input}
+            placeholder="Date of Birth (DD/MM/YYYY)"
+            placeholderTextColor="#ccc"
+            value={dob}
+            editable={false}
+          />
         </TouchableOpacity>
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
@@ -112,24 +133,28 @@ export default function CensusScreen({ navigation }) {
           onCancel={() => setDatePickerVisibility(false)}
         />
 
-        <RNPickerSelect
-          onValueChange={(value) => setGender(value)}
-          placeholder={{ label: 'Select Gender', value: null }}
-          items={[
-            { label: 'Male', value: 'Male' },
-            { label: 'Female', value: 'Female' },
-            { label: 'Other', value: 'Other' },
-          ]}
-          style={pickerSelectStyles}
-          value={gender}
-        />
+        {/* Gender Picker */}
+        <View style={styles.pickerWrapper}>
+          <RNPickerSelect
+            onValueChange={(value) => setGender(value)}
+            placeholder={{ label: 'Select Gender', value: null }}
+            items={[
+              { label: 'Male', value: 'Male' },
+              { label: 'Female', value: 'Female' },
+              { label: 'Other', value: 'Other' },
+            ]}
+            style={pickerSelectStyles}
+            value={gender}
+            useNativeAndroidPickerStyle={false}
+          />
+        </View>
 
         <TextInput style={styles.input} placeholder="City" placeholderTextColor="#ccc" value={city} onChangeText={setCity} />
         <TextInput style={styles.input} placeholder="Occupation" placeholderTextColor="#ccc" value={occupation} onChangeText={setOccupation} />
 
         <Text style={styles.sectionTitle}>Emergency Contact</Text>
         <TextInput style={styles.input} placeholder="Name" placeholderTextColor="#ccc" value={emergencyName} onChangeText={setEmergencyName} />
-        <TextInput style={styles.input} placeholder="Phone Number" placeholderTextColor="#ccc" value={emergencyPhone} onChangeText={setEmergencyPhone} />
+        <TextInput style={styles.input} placeholder="Phone Number" placeholderTextColor="#ccc" value={emergencyPhone} onChangeText={setEmergencyPhone} keyboardType="phone-pad" />
         <TextInput style={styles.input} placeholder="Relationship" placeholderTextColor="#ccc" value={emergencyRelation} onChangeText={setEmergencyRelation} />
 
         <Text style={styles.sectionTitle}>Vehicle Details</Text>
@@ -210,6 +235,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
   },
+  pickerWrapper: {
+    marginBottom: 15,
+  },
   sectionTitle: {
     color: '#fff',
     fontSize: 18,
@@ -229,3 +257,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+

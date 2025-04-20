@@ -5,35 +5,44 @@
     "scheme": "getaway",
     "icon": "./assets/getaway-logo.png",
     "androidPackage": "com.arnavpania.getaway",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "owner": "arnavpania",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.codenest.getaway"
-    },
-    "android": {
-      "package": "com.codenest.getaway",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+      "bundleIdentifier": "com.codenest.getaway",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
-    "web": {
+    "android": {
+      "package": "com.codenest.getaway"},
+     
+     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
         "projectId": "9acf5bda-8c75-452b-98f1-bfcb4ed70df7"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/9acf5bda-8c75-452b-98f1-bfcb4ed70df7"
     }
   }
 }

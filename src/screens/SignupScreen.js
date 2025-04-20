@@ -75,12 +75,14 @@ export default function SignupScreen({ navigation }) {
       });
 
       showToast('success', 'Signup Successful', 'Welcome to GETAWAY!');
-      navigation.replace('Census');
+      navigation.navigate('Census');
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
         showToast('info', 'Account Exists', 'Redirecting to login...');
-        navigation.navigate('Login');
-      } else {
+        setTimeout(() => {
+          navigation.navigate('Login');
+        }, 1500);
+        } else {
         showToast('error', 'Signup Error', error.message);
       }
     }
@@ -163,19 +165,22 @@ export default function SignupScreen({ navigation }) {
       </Text>
 
       <Modal transparent={true} visible={modalVisible} animationType="fade">
-        <View style={styles.modalBackdrop}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Terms & Conditions</Text>
-            <Text style={styles.modalText}>
-              {/* Update this content before production */}
-              Tu ise Isliye padh raha hai kyuki tu maderchood hai aur tuje hamaare app pe bharosa nahi hai...
-            </Text>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+  <View style={styles.modalBackdrop}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalTitle}>Terms & Conditions</Text>
+      <ScrollView style={{ maxHeight: 300 }}>
+        <Text style={styles.modalText}>
+          {/* Update this content before production */}
+          Tu ise Isliye padh raha hai kyuki tu maderchood hai aur tuje hamaare app pe bharosa nahi hai toh agar tuje mera app use karna hai toh fuck off from this screen. Iske baad T&C ko ok kar phir life aur app mai aage bad maderchood. Sahi mai thoda sa Bhen ka Loda hai kya tu......🤬
+        </Text>
+      </ScrollView>
+      <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+        <Text style={styles.closeButtonText}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
 
       <Toast />
     </View>
