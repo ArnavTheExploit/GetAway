@@ -3,8 +3,7 @@
     "name": "GetAway",
     "slug": "GetAway",
     "scheme": "getaway",
-    "icon": "./assets/getaway-logo.png",
-    "androidPackage": "com.arnavpania.getaway",
+    "icon": "./assets/ga-icon.png",
     "platforms": [
       "ios",
       "android",
@@ -28,9 +27,9 @@
       }
     },
     "android": {
-      "package": "com.codenest.getaway"},
-     
-     "web": {
+      "package": "com.codenest.getaway"
+    },
+    "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
@@ -43,6 +42,9 @@
     },
     "updates": {
       "url": "https://u.expo.dev/9acf5bda-8c75-452b-98f1-bfcb4ed70df7"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

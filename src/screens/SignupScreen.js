@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, Modal,
-  StyleSheet, Image, Platform,
+  StyleSheet, Image, Platform, ScrollView,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
@@ -46,26 +46,26 @@ export default function SignupScreen({ navigation }) {
       showToast('error', 'Missing Fields', 'Please fill out all fields.');
       return;
     }
-
+  
     if (password.length < 6) {
       showToast('error', 'Weak Password', 'Password must be at least 6 characters.');
       return;
     }
-
+  
     if (password !== confirmPassword) {
       showToast('error', 'Password Mismatch', 'Both passwords must match.');
       return;
     }
-
+  
     if (!agree) {
       showToast('error', 'Terms Not Accepted', 'Please accept the Terms & Conditions.');
       return;
     }
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         name,
@@ -73,21 +73,24 @@ export default function SignupScreen({ navigation }) {
         createdAt: serverTimestamp(),
         platform: Platform.OS,
       });
-
+  
       showToast('success', 'Signup Successful', 'Welcome to GETAWAY!');
-      navigation.navigate('Census');
+      setTimeout(() => navigation.navigate('Census'), 1500);
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
-        showToast('info', 'Account Exists', 'Redirecting to login...');
-        setTimeout(() => {
-          navigation.navigate('Login');
-        }, 1500);
-        } else {
+        showToast(
+          'info',
+          'Email Already Registered',
+          'Please log in or use a different email.'
+        );
+      } else if (error.code === 'auth/invalid-email') {
+        showToast('error', 'Invalid Email', 'Please enter a valid email address.');
+      } else {
         showToast('error', 'Signup Error', error.message);
       }
     }
   };
-
+  
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/pin.png')} style={styles.logo} />
@@ -164,23 +167,31 @@ export default function SignupScreen({ navigation }) {
         </Text>
       </Text>
 
+      {/* ✅ Updated Modal */}
       <Modal transparent={true} visible={modalVisible} animationType="fade">
-  <View style={styles.modalBackdrop}>
-    <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>Terms & Conditions</Text>
-      <ScrollView style={{ maxHeight: 300 }}>
-        <Text style={styles.modalText}>
-          {/* Update this content before production */}
-          Tu ise Isliye padh raha hai kyuki tu maderchood hai aur tuje hamaare app pe bharosa nahi hai toh agar tuje mera app use karna hai toh fuck off from this screen. Iske baad T&C ko ok kar phir life aur app mai aage bad maderchood. Sahi mai thoda sa Bhen ka Loda hai kya tu......🤬
-        </Text>
-      </ScrollView>
-      <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-        <Text style={styles.closeButtonText}>Close</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
-
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Terms & Conditions</Text>
+            <ScrollView style={{ maxHeight: 300 }}>
+              <Text style={styles.modalText}>
+                Welcome to GETAWAY! 🛫 Before we officially become besties, here’s the deal:{'\n\n'} 
+                
+                1. Don't use our app to do anything shady. Seriously. No villain arcs here. 😎 {'\n'} 
+                2. We’ll try not to crash. If we do, yell at the bugs, not us. 🐞 {'\n'}  
+                3. Your data is treated like our secret crush—kept safe, never overshared. 💌 {'\n'}  
+                4. If you forget your password, we’ll pretend it never existed and help you reset it. 🤷‍♂️  {'\n'} 
+                5. We may send you updates that you didn’t know you needed. But trust us, you do. 🚀  {'\n'} 
+                6. By using GETAWAY, you agree to travel responsibly, tap with flair, and vibe respectfully. 💃 {'\n\n'}  
+                
+                If any of the above makes you uncomfortable, take a deep breath and proceed anyway. Life’s short. Let’s GETAWAY!
+              </Text>
+            </ScrollView>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <Toast />
     </View>

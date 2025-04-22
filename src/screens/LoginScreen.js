@@ -44,7 +44,7 @@ export default function LoginScreen({ navigation }) {
         type: 'success',
         text1: 'Login Successful!',
       });
-      navigation.replace('Home');
+      navigation.replace('Drawer');
     } catch (error) {
       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
         Toast.show({
@@ -109,7 +109,7 @@ export default function LoginScreen({ navigation }) {
       <Text style={styles.signupPrompt}>
         Don’t have an account?{' '}
         <Text style={styles.signupLink} onPress={() => navigation.navigate('Signup')}>
-          Sign Up
+          Create Account
         </Text>
       </Text>
 
@@ -187,7 +187,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   signupLink: {
-    color: '#fff',
+    color: '#00f',
     fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });

@@ -1,3 +1,4 @@
+// src/screens/CensusScreen.js
 import React, { useState } from 'react';
 import {
   View,
@@ -8,7 +9,6 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  Platform,
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,10 +17,9 @@ import RNPickerSelect from 'react-native-picker-select';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { db } from '../firebaseConfig';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CensusScreen({ navigation }) {
-  console.log("CensusScreen rendered");
-
   const [profileImage, setProfileImage] = useState(null);
   const [fullName, setFullName] = useState('');
   const [dob, setDob] = useState('');
@@ -58,31 +57,54 @@ export default function CensusScreen({ navigation }) {
     setDatePickerVisibility(false);
   };
 
+  const saveToLocal = async (data) => {
+    try {
+      await AsyncStorage.setItem('userProfile', JSON.stringify(data));
+    } catch (e) {
+      console.log('Error saving to AsyncStorage', e);
+    }
+  };
+
   const handleSave = async () => {
     if (!fullName || !dob || !gender || !city) {
       Alert.alert("Missing Info", "Please fill in all required fields.");
       return;
     }
 
+    const userData = {
+      profileImage,
+      fullName,
+      dob,
+      gender,
+      city,
+      occupation,
+      emergencyName,
+      emergencyPhone,
+      emergencyRelation,
+      vehicleNumber,
+    };
+
     try {
       await addDoc(collection(db, 'censusData'), {
-        profileImage,
-        fullName,
-        dob,
-        gender,
-        city,
-        occupation,
-        emergencyName,
-        emergencyPhone,
-        emergencyRelation,
-        vehicleNumber,
+        ...userData,
         createdAt: serverTimestamp(),
       });
+
+      await saveToLocal(userData);
       console.log("Census data saved");
-      navigation.replace('Home');
+      navigation.replace('Drawer');
     } catch (error) {
       console.log('Error saving census data:', error);
     }
+  };
+
+  const handleSkip = async () => {
+    const userData = {
+      profileImage,
+      fullName,
+    };
+    await saveToLocal(userData);
+    navigation.replace('Home');
   };
 
   return (
@@ -91,9 +113,6 @@ export default function CensusScreen({ navigation }) {
         <View style={styles.headerRow}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.replace('Home')}>
-            <Text style={styles.skipText}>Skip</Text>
           </TouchableOpacity>
         </View>
 
@@ -133,7 +152,6 @@ export default function CensusScreen({ navigation }) {
           onCancel={() => setDatePickerVisibility(false)}
         />
 
-        {/* Gender Picker */}
         <View style={styles.pickerWrapper}>
           <RNPickerSelect
             onValueChange={(value) => setGender(value)}
@@ -149,19 +167,60 @@ export default function CensusScreen({ navigation }) {
           />
         </View>
 
-        <TextInput style={styles.input} placeholder="City" placeholderTextColor="#ccc" value={city} onChangeText={setCity} />
-        <TextInput style={styles.input} placeholder="Occupation" placeholderTextColor="#ccc" value={occupation} onChangeText={setOccupation} />
+        <TextInput
+          style={styles.input}
+          placeholder="City"
+          placeholderTextColor="#ccc"
+          value={city}
+          onChangeText={setCity}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Occupation"
+          placeholderTextColor="#ccc"
+          value={occupation}
+          onChangeText={setOccupation}
+        />
 
         <Text style={styles.sectionTitle}>Emergency Contact</Text>
-        <TextInput style={styles.input} placeholder="Name" placeholderTextColor="#ccc" value={emergencyName} onChangeText={setEmergencyName} />
-        <TextInput style={styles.input} placeholder="Phone Number" placeholderTextColor="#ccc" value={emergencyPhone} onChangeText={setEmergencyPhone} keyboardType="phone-pad" />
-        <TextInput style={styles.input} placeholder="Relationship" placeholderTextColor="#ccc" value={emergencyRelation} onChangeText={setEmergencyRelation} />
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          placeholderTextColor="#ccc"
+          value={emergencyName}
+          onChangeText={setEmergencyName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Phone Number"
+          placeholderTextColor="#ccc"
+          value={emergencyPhone}
+          onChangeText={setEmergencyPhone}
+          keyboardType="phone-pad"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Relationship"
+          placeholderTextColor="#ccc"
+          value={emergencyRelation}
+          onChangeText={setEmergencyRelation}
+        />
 
         <Text style={styles.sectionTitle}>Vehicle Details</Text>
-        <TextInput style={styles.input} placeholder="Vehicle Number" placeholderTextColor="#ccc" value={vehicleNumber} onChangeText={setVehicleNumber} />
+        <TextInput
+          style={styles.input}
+          placeholder="Vehicle Number"
+          placeholderTextColor="#ccc"
+          value={vehicleNumber}
+          onChangeText={setVehicleNumber}
+        />
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.saveButtonText}>Save & Continue</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleSkip}>
+          <Text style={styles.skipTextBottom}>Skip for now</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -196,12 +255,8 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginBottom: 20,
-  },
-  skipText: {
-    color: '#aaa',
-    fontSize: 16,
   },
   title: {
     color: '#fff',
@@ -256,5 +311,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  skipTextBottom: {
+    color: '#aaa',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 15,
+    textDecorationLine: 'underline',
+  },
 });
-
