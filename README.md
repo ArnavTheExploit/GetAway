@@ -1,7 +1,7 @@
 # Getaway
 
 <p align="center">
-  <img src="./assets/ga-icon.png" alt="Getaway Logo" width="150" />
+  <img src="./assets/ga-icon.png" alt="Getaway Logo" width="150" style="border-radius: 15px;" />
 </p>
 
 <p align="center">
@@ -48,5 +48,9 @@
    ```bash
    git clone https://github.com/your-username/getaway.git
    cd getaway
-
+2. **Install dependencies**
+   ```bash
+   npm install
+    # or
+   yarn install
 
