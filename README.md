@@ -1,6 +1,12 @@
 # Getaway
 
-**Getaway** is a modern, cross-platform mobile app built with React Native and Firebase, designed to provide users with seamless authentication experiences and a sleek travel companion interface. This app aims to simplify sign-in/signup flows with social authentication, a welcoming splash screen, and beautiful UI/UX.
+<p align="center">
+  <img src="./assets/ga-logo.png" alt="Getaway Logo" width="150" />
+</p>
+
+<p align="center">
+  <strong>Getaway</strong> is a modern, cross-platform mobile app built with React Native and Firebase, designed to provide users with seamless authentication experiences and a sleek travel companion interface. This app aims to simplify sign-in/signup flows with social authentication, a welcoming splash screen, and beautiful UI/UX.
+</p>
 
 ---
 
@@ -17,19 +23,22 @@
 
 ---
 
-## Screenshots
+## Tech Stack
 
-*Add some screenshots here once you have them.*
+<p align="center">
+  <img alt="React Native" src="https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img alt="Firebase" src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" />
+  <img alt="Expo" src="https://img.shields.io/badge/Expo-1B1F23?style=for-the-badge&logo=expo&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+  <img alt="React Navigation" src="https://img.shields.io/badge/React_Navigation-00C7B7?style=for-the-badge" />
+</p>
 
 ---
 
-## Tech Stack
+## Screenshots
 
-- **React Native** with TypeScript  
-- **Firebase Authentication** (Email/Password, Facebook Login)  
-- **Expo (optional)** for easier development and deployment  
-- **Tailwind CSS / React Native Styling** for UI design  
-- **React Navigation** for routing and navigation
+*Add some screenshots here once you have them.*
 
 ---
 
@@ -39,3 +48,4 @@
    ```bash
    git clone https://github.com/your-username/getaway.git
    cd getaway
+
