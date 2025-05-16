@@ -1,7 +1,7 @@
 # Getaway
 
 <p align="center">
-  <img src="./assets/ga-logo.png" alt="Getaway Logo" width="150" />
+  <img src="./assets/ga-icon.png" alt="Getaway Logo" width="150" />
 </p>
 
 <p align="center">
@@ -48,4 +48,5 @@
    ```bash
    git clone https://github.com/your-username/getaway.git
    cd getaway
+
 
